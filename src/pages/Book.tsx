@@ -63,7 +63,8 @@ const Book = () => {
       sport: sport || null,
       ranking: ranking || null,
       goals: goals || null,
-    });
+      referred_by: referredBy || null,
+    } as any);
 
     if (error) {
       toast({ title: "Booking failed", description: error.message, variant: "destructive" });
