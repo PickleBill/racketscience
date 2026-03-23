@@ -85,6 +85,14 @@ const Navbar = () => {
           ))}
           {user ? (
             <>
+              {isAdmin && (
+                <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                  <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
+                </button>
+              )}
+              <button onClick={() => navigate("/refer")} className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                <Share2 className="w-3.5 h-3.5" /> Share
+              </button>
               <Button size="sm" variant="ghost" onClick={handleSignOut} className="text-muted-foreground">
                 Sign Out
               </Button>
