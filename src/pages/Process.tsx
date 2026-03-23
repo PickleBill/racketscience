@@ -121,7 +121,6 @@ const Process = () => {
                 Free 5-Min Consult
               </Button>
             </div>
-            </div>
           </div>
         </div>
       </div>

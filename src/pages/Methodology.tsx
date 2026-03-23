@@ -142,7 +142,6 @@ const Methodology = () => {
                 Book Assessment
               </Button>
             </div>
-            </div>
           </div>
         </div>
       </div>
