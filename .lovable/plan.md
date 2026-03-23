@@ -1,141 +1,79 @@
 
 
-# MasterClass Racketry — Enhancement Plan
+# MasterClass Racketry — Admin Dashboard, Visual Upgrades, Spider-Man Easter Egg & Referral System
 
-## Overview
-Major upgrade: make all buttons functional, add sub-pages, enable Lovable Cloud for auth + booking, add hero imagery, enhance visual polish, and create a coaching journey experience.
+## 1. Admin Dashboard (`/admin`)
 
----
+**Database changes:**
+- Create `user_roles` table with `app_role` enum (`admin`, `user`) and a `has_role()` security definer function
+- Add SELECT policies on `consultations` and `assessments` tables for admin users
+- Add SELECT/UPDATE policies on `bookings` for admin users
 
-## 1. Enable Lovable Cloud
-- Spin up Lovable Cloud backend for authentication and database
-- Set up email auth (sign in with email)
-- Create database tables: `bookings`, `consultations`, `assessments`
+**Page:** `/admin` route, auth-gated with admin role check
+- Three tabs: Bookings, Consultations, Assessments
+- Each tab shows a data table with key columns (name, email, sport, date, status)
+- Status badges (confirmed/pending) with lime accent
+- Simple status update capability on bookings (confirmed → completed → cancelled)
+- Dark glassmorphism table styling consistent with site aesthetic
 
-## 2. Sticky Navigation Bar
-- New `Navbar` component with smooth-scroll links to each section (Framework, Specialist, Pricing, Bio-Vault, Stories)
-- Links to sub-pages: Process, Methodology, Free Consultation
-- "Sign In" and "Book Now" buttons in the nav
-- Glassmorphism style, fixed at top, appears on scroll
+**Navbar:** Add "Dashboard" link visible only when user has admin role
 
-## 3. Hero Section Upgrade
-- Add a high-quality Unsplash hero background image (dark racket sports imagery) with overlay
-- Wire "Apply for Elite Coaching" → navigates to `/book` page
-- Wire "View the Biomechanic Vault" → smooth-scrolls to Bio-Vault section
-- Add subtle particle/floating glow effects
+## 2. Hero Images on Process & Methodology Pages
 
-## 4. New Sub-Pages
+- Add dark sports photography hero banners (from Unsplash URLs via `create_asset`) to both `/process` and `/methodology` pages
+- Full-width hero with gradient overlay (same treatment as main hero)
+- Keep existing content below, just add visual impact at top
 
-### `/process` — "The Coaching Journey"
-- Step-by-step visual timeline: Initial Assessment → Bio-Vault Analysis → Custom Program → Progressive Mastery
-- Each step has an icon, description, and what the athlete experiences
-- CTA at bottom to book a session
+## 3. Spider-Man / "Spider-Casey" Easter Egg in Specialist Section
 
-### `/methodology` — "The Science Behind the Swing"
-- Sections on biomechanical analysis, kinetic chain optimization, injury prevention
-- Data visualization mockups showing improvement metrics
-- Coach credentials and philosophy deep-dive
+- Add a fun subsection in the Specialist bio area with the nickname origin story
+- Create an **animated SVG illustration** of two pickleball players in Spider-Man-style poses pointing at each other, with pickleballs instead of webs — stylized and minimal (line art with lime accents on dark background), keeping it premium/not cartoony
+- Brief copy: *"Fun fact: Casey earned the nickname 'Spider-Man' when he first started — for his uncanny court coverage and reflexes that seemed to defy physics. Some things never change."*
+- The illustration animates on scroll (players slide in from sides, pickleballs "fly" with dotted trajectory lines)
 
-### `/consultation` — "Free 5-Minute Assessment"
-- Form: name, email, sport, experience level, goals, option to upload a video link
-- Textarea for "Tell us about your game"
-- Submit stores to Supabase `consultations` table
-- Confirmation screen after submission
+## 4. Referral System ("Share the Court")
 
-### `/book` — Booking Page (requires auth)
-- Email sign-in/sign-up flow (Lovable Cloud auth)
-- After auth: calendar-style date picker to select a session date
-- Choose session type (Legacy Assessment, Group Clinic, Private Session)
-- Time slot selection (morning/afternoon/evening)
-- Confirmation with details saved to `bookings` table
-- Post-booking: enter additional info (sport, ranking, goals)
+**Concept:** Experiential, not transactional. Rewards are experiences — free lesson, free body bag, or a pro teammate for a match.
 
-### `/auth` — Sign In / Sign Up
-- Simple email auth page using Supabase auth
-- Redirect to `/book` after successful login
+**How it works:**
+- Any authenticated user gets a "Share the Court" section on their booking confirmation page and in the navbar dropdown
+- They can generate a personal referral link: `?ref=<user_id>` appended to the booking page URL
+- One-click copy button with a fun message: *"I found my secret weapon. Your turn."*
+- The booking page reads the `ref` query param and stores it in the `bookings` table
 
-## 5. Wire All Existing Buttons
-- Pricing "Get Started" buttons → navigate to `/book`
-- Footer "Reserve My Assessment" form → saves to Supabase `assessments` table (or navigates to `/book`)
-- Footer links (Privacy, Terms, Contact) → placeholder pages or modals
-- Value Prop cards → clickable, link to `/methodology`
-- Audience section items → link to `/consultation`
-- Testimonial section → add a "Start Your Story" CTA linking to `/consultation`
+**Database changes:**
+- Add `referred_by` column (uuid, nullable) to `bookings` table
+- Add `referrals` table to track rewards: `id`, `referrer_id`, `referred_booking_id`, `reward_type`, `redeemed`, `created_at`
 
-## 6. Visual Enhancements
-- Hero: dark sports background image with gradient overlay
-- Add glow/pulse animations to section headers as they scroll into view
-- Intersection Observer fade-in animations on all sections
-- Subtle parallax on the Bio-Vault phone mockup
-- Add more glow effects on card hovers (lime glow radiating outward)
-- Pricing Elite card: animated border glow
-- Add decorative background elements (gradient orbs, subtle grid patterns) between sections
+**Reward display:** After a referred booking is confirmed, the referrer sees a toast/notification about their reward. Rewards rotate playfully:
+- "Free lesson on us"
+- "Premium body bag — yours"  
+- "A pro plays on your team next match"
 
-## 7. Database Schema (via Lovable Cloud migrations)
+**Referral page component:** Simple `/refer` page where logged-in users can:
+- See their unique link with copy button
+- See how many friends they've brought in
+- See earned rewards
 
-```sql
--- Bookings table
-create table public.bookings (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users(id) on delete cascade,
-  session_type text not null,
-  session_date date not null,
-  time_slot text not null,
-  sport text,
-  ranking text,
-  goals text,
-  status text default 'confirmed',
-  created_at timestamptz default now()
-);
-
--- Free consultations (no auth required)
-create table public.consultations (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  email text not null,
-  sport text,
-  experience_level text,
-  goals text,
-  video_link text,
-  message text,
-  status text default 'pending',
-  created_at timestamptz default now()
-);
-
--- Assessment reservations
-create table public.assessments (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  email text not null,
-  sport text,
-  ranking text,
-  created_at timestamptz default now()
-);
-```
-
-RLS: bookings readable/insertable by authenticated users for their own rows. Consultations and assessments insertable by anyone (public lead capture).
-
-## 8. File Changes Summary
+## 5. File Changes Summary
 
 **New files:**
-- `src/components/Navbar.tsx` — sticky navigation
-- `src/pages/Process.tsx` — coaching journey page
-- `src/pages/Methodology.tsx` — science/methodology page
-- `src/pages/Consultation.tsx` — free consultation form
-- `src/pages/Book.tsx` — booking flow with auth gate
-- `src/pages/Auth.tsx` — sign in/sign up
-- `src/hooks/useScrollAnimation.ts` — Intersection Observer hook for fade-ins
+- `src/pages/Admin.tsx` — admin dashboard with tabs
+- `src/pages/Refer.tsx` — referral link generator & reward tracker
+- `src/components/SpiderManEasterEgg.tsx` — animated SVG illustration
 
 **Modified files:**
-- `src/App.tsx` — add routes for all new pages
-- `src/pages/Index.tsx` — add Navbar, scroll animations
-- `src/components/HeroSection.tsx` — background image, wire buttons
-- `src/components/PricingSection.tsx` — wire buttons to `/book`
-- `src/components/FooterSection.tsx` — wire form to Supabase
-- `src/components/ValuePropSection.tsx` — make cards clickable
-- `src/components/TestimonialSection.tsx` — add CTA button
-- `src/components/AudienceSection.tsx` — add CTA links
-- `src/components/BioVaultSection.tsx` — add "Explore the Vault" button
-- `src/components/SpecialistSection.tsx` — add "Learn the Methodology" link
-- `src/index.css` — additional animation keyframes, scroll-triggered classes
+- `src/App.tsx` — add `/admin` and `/refer` routes
+- `src/components/Navbar.tsx` — add Dashboard (admin) and Share the Court links
+- `src/components/SpecialistSection.tsx` — add Spider-Man nickname story + illustration
+- `src/pages/Process.tsx` — add hero image banner
+- `src/pages/Methodology.tsx` — add hero image banner
+- `src/pages/Book.tsx` — read `ref` query param, store in booking, show referral CTA on confirmation
+
+**Database migrations:**
+- Create `user_roles` table + `app_role` enum + `has_role()` function
+- Add SELECT policies on `consultations`/`assessments` for admins
+- Add admin SELECT/UPDATE on `bookings`
+- Add `referred_by` column to `bookings`
+- Create `referrals` table with RLS
 
