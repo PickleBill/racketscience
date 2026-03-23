@@ -7,9 +7,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarIcon, CheckCircle, ArrowRight } from "lucide-react";
+import { CalendarIcon, CheckCircle, ArrowRight, Copy, Share2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
 const sessionTypes = [
