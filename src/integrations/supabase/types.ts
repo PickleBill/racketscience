@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assessments: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          ranking: string | null
+          sport: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          ranking?: string | null
+          sport?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          ranking?: string | null
+          sport?: string | null
+        }
+        Relationships: []
+      }
+      bookings: {
+        Row: {
+          created_at: string | null
+          goals: string | null
+          id: string
+          ranking: string | null
+          session_date: string
+          session_type: string
+          sport: string | null
+          status: string | null
+          time_slot: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          goals?: string | null
+          id?: string
+          ranking?: string | null
+          session_date: string
+          session_type: string
+          sport?: string | null
+          status?: string | null
+          time_slot: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          goals?: string | null
+          id?: string
+          ranking?: string | null
+          session_date?: string
+          session_type?: string
+          sport?: string | null
+          status?: string | null
+          time_slot?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      consultations: {
+        Row: {
+          created_at: string | null
+          email: string
+          experience_level: string | null
+          goals: string | null
+          id: string
+          message: string | null
+          name: string
+          sport: string | null
+          status: string | null
+          video_link: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          experience_level?: string | null
+          goals?: string | null
+          id?: string
+          message?: string | null
+          name: string
+          sport?: string | null
+          status?: string | null
+          video_link?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          experience_level?: string | null
+          goals?: string | null
+          id?: string
+          message?: string | null
+          name?: string
+          sport?: string | null
+          status?: string | null
+          video_link?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
