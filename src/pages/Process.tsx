@@ -100,9 +100,12 @@ const Process = () => {
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Every elite athlete follows a structured path. Here's exactly how we take you from where you are to where you want to be.
             </p>
-          </div>
+        </div>
+      </div>
 
-          <div className="space-y-2">
+      <div className="pb-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-2 mt-16">
             {steps.map((step, i) => (
               <StepCard key={step.title} step={step} index={i} />
             ))}
