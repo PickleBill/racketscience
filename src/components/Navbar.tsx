@@ -133,6 +133,14 @@ const Navbar = () => {
           <div className="pt-4 border-t border-border space-y-2">
             {user ? (
               <>
+                {isAdmin && (
+                  <Button size="sm" variant="ghost" onClick={() => { setMobileOpen(false); navigate("/admin"); }} className="w-full text-muted-foreground justify-start gap-2">
+                    <LayoutDashboard className="w-4 h-4" /> Dashboard
+                  </Button>
+                )}
+                <Button size="sm" variant="ghost" onClick={() => { setMobileOpen(false); navigate("/refer"); }} className="w-full text-muted-foreground justify-start gap-2">
+                  <Share2 className="w-4 h-4" /> Share the Court
+                </Button>
                 <Button size="sm" variant="ghost" onClick={handleSignOut} className="w-full text-muted-foreground">
                   Sign Out
                 </Button>

@@ -112,9 +112,14 @@ const Book = () => {
             <p className="text-muted-foreground mb-8">
               {date && format(date, "EEEE, MMMM d, yyyy")} — {timeSlots.find(t => t.value === timeSlot)?.label}
             </p>
-            <Button onClick={() => navigate("/")} variant="outline" className="rounded-full px-8 border-primary/30 text-primary">
-              Back to Home
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button onClick={() => navigate("/")} variant="outline" className="rounded-full px-8 border-primary/30 text-primary">
+                Back to Home
+              </Button>
+              <Button onClick={() => navigate("/refer")} className="rounded-full px-8 glow-lime gap-2">
+                <Share2 className="w-4 h-4" /> Share the Court
+              </Button>
+            </div>
           </div>
         </div>
       </div>

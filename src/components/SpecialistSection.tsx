@@ -86,6 +86,9 @@ const SpecialistSection = () => {
             </div>
           </div>
         </div>
+
+        {/* Spider-Man Easter Egg */}
+        <SpiderManEasterEgg />
       </div>
     </section>
   );
