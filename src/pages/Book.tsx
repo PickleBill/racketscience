@@ -28,6 +28,8 @@ const timeSlots = [
 const Book = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const referredBy = searchParams.get("ref");
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [booked, setBooked] = useState(false);
