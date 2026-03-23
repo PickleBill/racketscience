@@ -1,5 +1,7 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const tiers = [
   {
@@ -48,9 +50,12 @@ const tiers = [
 ];
 
 const PricingSection = () => {
+  const navigate = useNavigate();
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
     <section className="py-32 px-6">
-      <div className="max-w-6xl mx-auto">
+      <div ref={ref} className={`max-w-6xl mx-auto transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
         <p className="text-primary text-sm tracking-[0.25em] uppercase text-center mb-4 font-medium">
           Boutique Pricing
         </p>
@@ -67,12 +72,12 @@ const PricingSection = () => {
               key={tier.name}
               className={`rounded-2xl p-8 flex flex-col transition-all duration-500 ${
                 tier.highlighted
-                  ? "glass border-primary/40 glow-lime-strong relative"
-                  : "glass hover:bg-white/10"
+                  ? "glass border-primary/40 glow-lime-strong relative hover:scale-[1.02]"
+                  : "glass hover:bg-white/10 hover:glow-lime"
               }`}
             >
               {tier.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full tracking-wider uppercase">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full tracking-wider uppercase animate-pulse-glow">
                   Most Popular
                 </div>
               )}
@@ -94,6 +99,7 @@ const PricingSection = () => {
               </ul>
 
               <Button
+                onClick={() => navigate("/book")}
                 className={`w-full rounded-full py-6 font-semibold tracking-wide ${
                   tier.highlighted
                     ? "glow-lime hover:scale-105 transition-transform"

@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ValuePropSection from "@/components/ValuePropSection";
 import SpecialistSection from "@/components/SpecialistSection";
@@ -10,13 +11,14 @@ import FooterSection from "@/components/FooterSection";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Navbar />
       <HeroSection />
-      <ValuePropSection />
+      <div id="value-props"><ValuePropSection /></div>
       <SpecialistSection />
-      <PricingSection />
-      <BioVaultSection />
+      <div id="pricing"><PricingSection /></div>
+      <div id="bio-vault"><BioVaultSection /></div>
       <AudienceSection />
-      <TestimonialSection />
+      <div id="testimonials"><TestimonialSection /></div>
       <FooterSection />
     </div>
   );
