@@ -10,6 +10,8 @@ import Book from "./pages/Book.tsx";
 import Process from "./pages/Process.tsx";
 import Methodology from "./pages/Methodology.tsx";
 import Consultation from "./pages/Consultation.tsx";
+import Admin from "./pages/Admin.tsx";
+import Refer from "./pages/Refer.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/process" element={<Process />} />
           <Route path="/methodology" element={<Methodology />} />
           <Route path="/consultation" element={<Consultation />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/refer" element={<Refer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

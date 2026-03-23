@@ -2,6 +2,7 @@ import { Award, Shield, Users, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import SpiderManEasterEgg from "@/components/SpiderManEasterEgg";
 
 const CertificationSeal = () => (
   <svg viewBox="0 0 240 240" className="w-56 h-56 md:w-72 md:h-72" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,6 +86,9 @@ const SpecialistSection = () => {
             </div>
           </div>
         </div>
+
+        {/* Spider-Man Easter Egg */}
+        <SpiderManEasterEgg />
       </div>
     </section>
   );

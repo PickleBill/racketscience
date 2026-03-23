@@ -1,21 +1,34 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Share2, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.user.id).eq("role", "admin");
+        setIsAdmin(!!data && data.length > 0);
+      } else {
+        setIsAdmin(false);
+      }
     });
-    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.user.id).eq("role", "admin");
+        setIsAdmin(!!data && data.length > 0);
+      }
+    });
     return () => subscription.unsubscribe();
   }, []);
 
@@ -72,6 +85,14 @@ const Navbar = () => {
           ))}
           {user ? (
             <>
+              {isAdmin && (
+                <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                  <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
+                </button>
+              )}
+              <button onClick={() => navigate("/refer")} className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                <Share2 className="w-3.5 h-3.5" /> Share
+              </button>
               <Button size="sm" variant="ghost" onClick={handleSignOut} className="text-muted-foreground">
                 Sign Out
               </Button>
@@ -112,6 +133,14 @@ const Navbar = () => {
           <div className="pt-4 border-t border-border space-y-2">
             {user ? (
               <>
+                {isAdmin && (
+                  <Button size="sm" variant="ghost" onClick={() => { setMobileOpen(false); navigate("/admin"); }} className="w-full text-muted-foreground justify-start gap-2">
+                    <LayoutDashboard className="w-4 h-4" /> Dashboard
+                  </Button>
+                )}
+                <Button size="sm" variant="ghost" onClick={() => { setMobileOpen(false); navigate("/refer"); }} className="w-full text-muted-foreground justify-start gap-2">
+                  <Share2 className="w-4 h-4" /> Share the Court
+                </Button>
                 <Button size="sm" variant="ghost" onClick={handleSignOut} className="w-full text-muted-foreground">
                   Sign Out
                 </Button>

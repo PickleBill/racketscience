@@ -83,19 +83,29 @@ const Process = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-32 pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-20">
-            <p className="text-primary text-sm tracking-[0.25em] uppercase mb-4 font-medium">The Journey</p>
+
+      {/* Hero Banner */}
+      <div className="relative h-[50vh] min-h-[320px] flex items-center justify-center overflow-hidden">
+        <img
+          src="/__l5e/assets-v1/00d8d730-b9ef-46bc-9aa0-500bbeb211c4/process-hero.jpg"
+          alt="Dark court with dramatic lighting"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+        <div className="relative text-center px-6">
+          <p className="text-primary text-sm tracking-[0.25em] uppercase mb-4 font-medium">The Journey</p>
             <h1 className="font-serif text-4xl md:text-6xl text-foreground mb-6">
               From Assessment to <span className="text-gradient-lime">Mastery</span>
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Every elite athlete follows a structured path. Here's exactly how we take you from where you are to where you want to be.
             </p>
-          </div>
+        </div>
+      </div>
 
-          <div className="space-y-2">
+      <div className="pb-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-2 mt-16">
             {steps.map((step, i) => (
               <StepCard key={step.title} step={step} index={i} />
             ))}

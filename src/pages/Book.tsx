@@ -7,9 +7,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarIcon, CheckCircle, ArrowRight } from "lucide-react";
+import { CalendarIcon, CheckCircle, ArrowRight, Copy, Share2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
 const sessionTypes = [
@@ -27,6 +28,8 @@ const timeSlots = [
 const Book = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const referredBy = searchParams.get("ref");
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [booked, setBooked] = useState(false);
@@ -60,7 +63,8 @@ const Book = () => {
       sport: sport || null,
       ranking: ranking || null,
       goals: goals || null,
-    });
+      referred_by: referredBy || null,
+    } as any);
 
     if (error) {
       toast({ title: "Booking failed", description: error.message, variant: "destructive" });
@@ -108,9 +112,14 @@ const Book = () => {
             <p className="text-muted-foreground mb-8">
               {date && format(date, "EEEE, MMMM d, yyyy")} — {timeSlots.find(t => t.value === timeSlot)?.label}
             </p>
-            <Button onClick={() => navigate("/")} variant="outline" className="rounded-full px-8 border-primary/30 text-primary">
-              Back to Home
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button onClick={() => navigate("/")} variant="outline" className="rounded-full px-8 border-primary/30 text-primary">
+                Back to Home
+              </Button>
+              <Button onClick={() => navigate("/refer")} className="rounded-full px-8 glow-lime gap-2">
+                <Share2 className="w-4 h-4" /> Share the Court
+              </Button>
+            </div>
           </div>
         </div>
       </div>
