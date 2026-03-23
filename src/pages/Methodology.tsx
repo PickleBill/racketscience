@@ -77,8 +77,11 @@ const Methodology = () => {
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Our methodology is rooted in exercise science, biomechanics, and motor learning theory—not guesswork. Every technique we teach has a peer-reviewed foundation.
             </p>
-          </div>
+        </div>
+      </div>
 
+      <div className="pb-20 px-6">
+        <div className="max-w-6xl mx-auto">
           {/* Principles grid */}
           <div className="grid md:grid-cols-2 gap-8 mb-20">
             {principles.map((item, i) => (
