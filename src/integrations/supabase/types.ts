@@ -44,6 +44,7 @@ export type Database = {
       bookings: {
         Row: {
           created_at: string | null
+          email: string | null
           goals: string | null
           id: string
           ranking: string | null
@@ -53,10 +54,11 @@ export type Database = {
           sport: string | null
           status: string | null
           time_slot: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
+          email?: string | null
           goals?: string | null
           id?: string
           ranking?: string | null
@@ -66,10 +68,11 @@ export type Database = {
           sport?: string | null
           status?: string | null
           time_slot: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
+          email?: string | null
           goals?: string | null
           id?: string
           ranking?: string | null
@@ -79,7 +82,7 @@ export type Database = {
           sport?: string | null
           status?: string | null
           time_slot?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
