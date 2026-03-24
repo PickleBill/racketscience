@@ -99,7 +99,7 @@ const PricingSection = () => {
               </ul>
 
               <Button
-                onClick={() => navigate("/book")}
+                onClick={() => navigate(`/checkout?type=${tier.name === "Legacy Assessment" ? "legacy" : tier.name === "Growth Tier" ? "growth" : "elite"}&amount=${tier.price.replace("$", "").replace("/mo", "")}`)}
                 className={`w-full rounded-full py-6 font-semibold tracking-wide ${
                   tier.highlighted
                     ? "glow-lime hover:scale-105 transition-transform"

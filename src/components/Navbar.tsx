@@ -83,6 +83,11 @@ const Navbar = () => {
               {link.label}
             </button>
           ))}
+          {!user && (
+            <button onClick={() => navigate("/claim")} className="text-sm text-primary hover:text-primary/80 transition-colors font-medium">
+              Free Lesson
+            </button>
+          )}
           {user ? (
             <>
               {isAdmin && (
@@ -130,6 +135,11 @@ const Navbar = () => {
               {link.label}
             </button>
           ))}
+          {!user && (
+            <Button size="sm" variant="ghost" onClick={() => { setMobileOpen(false); navigate("/claim"); }} className="w-full text-primary justify-start font-medium">
+              🎁 Free Lesson
+            </Button>
+          )}
           <div className="pt-4 border-t border-border space-y-2">
             {user ? (
               <>
