@@ -86,6 +86,36 @@ export type Database = {
         }
         Relationships: []
       }
+      checkout_intents: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          email: string
+          id: string
+          name: string | null
+          session_type: string | null
+          status: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          email: string
+          id?: string
+          name?: string | null
+          session_type?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          session_type?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       consultations: {
         Row: {
           created_at: string | null
