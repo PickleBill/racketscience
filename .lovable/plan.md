@@ -1,79 +1,97 @@
 
 
-# MasterClass Racketry — Admin Dashboard, Visual Upgrades, Spider-Man Easter Egg & Referral System
+# Racket Science — Rebrand, Open Booking & Polish
 
-## 1. Admin Dashboard (`/admin`)
+## 1. Rebrand to "Racket Science"
 
-**Database changes:**
-- Create `user_roles` table with `app_role` enum (`admin`, `user`) and a `has_role()` security definer function
-- Add SELECT policies on `consultations` and `assessments` tables for admin users
-- Add SELECT/UPDATE policies on `bookings` for admin users
+Update every reference to "MasterClass Racketry" across the codebase:
+- **Navbar** logo text → "Racket Science"
+- **HeroSection** tagline badge → "Racket Science"
+- **Hero headline** → refreshed copy, e.g. "The Science of Your Swing" or similar
+- **index.html** `<title>` tag
+- **FooterSection** brand text
+- **All sub-pages** (Process, Methodology, Consultation) header references
 
-**Page:** `/admin` route, auth-gated with admin role check
-- Three tabs: Bookings, Consultations, Assessments
-- Each tab shows a data table with key columns (name, email, sport, date, status)
-- Status badges (confirmed/pending) with lime accent
-- Simple status update capability on bookings (confirmed → completed → cancelled)
-- Dark glassmorphism table styling consistent with site aesthetic
+## 2. Open Booking Flow (No Auth Required)
 
-**Navbar:** Add "Dashboard" link visible only when user has admin role
+Redesign `/book` so anyone can book without signing in:
 
-## 2. Hero Images on Process & Methodology Pages
+- Remove the auth gate entirely
+- Show the calendar + session type + time slot form to everyone
+- Add an **email field** (required) so the booking is tied to an email, not a user account
+- Add optional **Google / Apple OAuth** buttons: "Sign in for faster booking" — if they authenticate, pre-fill email and link `user_id`; if not, `user_id` is null and email is stored
+- After booking confirmation, show the progressive info collection (sport, ranking, goals) as optional "tell us more" fields
+- **Database**: make `bookings.user_id` nullable (migration) and add an `email` text column to `bookings`
+- Update RLS: allow anonymous inserts (public INSERT policy) with email required
+- Keep the referral `?ref=` param capture
 
-- Add dark sports photography hero banners (from Unsplash URLs via `create_asset`) to both `/process` and `/methodology` pages
-- Full-width hero with gradient overlay (same treatment as main hero)
-- Keep existing content below, just add visual impact at top
+## 3. Replace Spider-Man Stick Figures
 
-## 3. Spider-Man / "Spider-Casey" Easter Egg in Specialist Section
+- Remove the animated SVG stick-figure component (`SpiderManEasterEgg.tsx`)
+- Replace with a high-quality AI-generated image placeholder: use an Unsplash/stock-style dark sports photo as a temporary visual, with a note in the copy referencing the "Spider-Man" nickname
+- Add a prominent image container with overlay text telling the origin story
+- The user can later swap in a real AI-generated image of two Spider-Man-dressed pickleball players pointing at each other
 
-- Add a fun subsection in the Specialist bio area with the nickname origin story
-- Create an **animated SVG illustration** of two pickleball players in Spider-Man-style poses pointing at each other, with pickleballs instead of webs — stylized and minimal (line art with lime accents on dark background), keeping it premium/not cartoony
-- Brief copy: *"Fun fact: Casey earned the nickname 'Spider-Man' when he first started — for his uncanny court coverage and reflexes that seemed to defy physics. Some things never change."*
-- The illustration animates on scroll (players slide in from sides, pickleballs "fly" with dotted trajectory lines)
+## 4. Visual & UX Enhancements
 
-## 4. Referral System ("Share the Court")
+- **Stats banner**: Add an animated counter section between Specialist and Pricing showing key numbers (15+ years, 500+ athletes, 4 certifications, 3 sports)
+- **Scroll progress indicator**: Thin lime progress bar at top of page
+- **Section dividers**: Add subtle gradient line dividers between major sections
+- **Process timeline**: Add connecting vertical line between steps on the Process page
+- **Testimonial upgrade**: Add a second testimonial quote for social proof variety
+- **CTA consistency**: Ensure every page ends with a clear CTA back to `/book`
 
-**Concept:** Experiential, not transactional. Rewards are experiences — free lesson, free body bag, or a pro teammate for a match.
+## 5. Ensure All Flows Work
 
-**How it works:**
-- Any authenticated user gets a "Share the Court" section on their booking confirmation page and in the navbar dropdown
-- They can generate a personal referral link: `?ref=<user_id>` appended to the booking page URL
-- One-click copy button with a fun message: *"I found my secret weapon. Your turn."*
-- The booking page reads the `ref` query param and stores it in the `bookings` table
+- Wire all "Get Started" / "Book Now" / "Apply" buttons to `/book` (no auth redirect)
+- Footer form submits to `assessments` table (already working)
+- Consultation form submits to `consultations` table (already working)
+- Referral system remains auth-gated (need account to generate links)
+- Admin dashboard remains auth+role-gated
 
-**Database changes:**
-- Add `referred_by` column (uuid, nullable) to `bookings` table
-- Add `referrals` table to track rewards: `id`, `referrer_id`, `referred_booking_id`, `reward_type`, `redeemed`, `created_at`
+## 6. Database Migration
 
-**Reward display:** After a referred booking is confirmed, the referrer sees a toast/notification about their reward. Rewards rotate playfully:
-- "Free lesson on us"
-- "Premium body bag — yours"  
-- "A pro plays on your team next match"
+```sql
+-- Make user_id nullable for anonymous bookings
+ALTER TABLE public.bookings ALTER COLUMN user_id DROP NOT NULL;
 
-**Referral page component:** Simple `/refer` page where logged-in users can:
-- See their unique link with copy button
-- See how many friends they've brought in
-- See earned rewards
+-- Add email column for non-authenticated bookings
+ALTER TABLE public.bookings ADD COLUMN email text;
 
-## 5. File Changes Summary
+-- Update INSERT policy to allow public inserts
+DROP POLICY "Users can create their own bookings" ON public.bookings;
+CREATE POLICY "Anyone can create bookings"
+  ON public.bookings FOR INSERT TO public
+  WITH CHECK (true);
+```
 
-**New files:**
-- `src/pages/Admin.tsx` — admin dashboard with tabs
-- `src/pages/Refer.tsx` — referral link generator & reward tracker
-- `src/components/SpiderManEasterEgg.tsx` — animated SVG illustration
+## 7. File Changes
 
 **Modified files:**
-- `src/App.tsx` — add `/admin` and `/refer` routes
-- `src/components/Navbar.tsx` — add Dashboard (admin) and Share the Court links
-- `src/components/SpecialistSection.tsx` — add Spider-Man nickname story + illustration
-- `src/pages/Process.tsx` — add hero image banner
-- `src/pages/Methodology.tsx` — add hero image banner
-- `src/pages/Book.tsx` — read `ref` query param, store in booking, show referral CTA on confirmation
+- `src/pages/Book.tsx` — remove auth gate, add email field, optional OAuth
+- `src/components/Navbar.tsx` — rebrand logo
+- `src/components/HeroSection.tsx` — rebrand copy
+- `src/components/SpiderManEasterEgg.tsx` — replace SVG with image + story layout
+- `src/components/SpecialistSection.tsx` — update references
+- `src/components/FooterSection.tsx` — rebrand
+- `src/components/PricingSection.tsx` — update copy
+- `src/components/ValuePropSection.tsx` — update copy
+- `src/components/TestimonialSection.tsx` — add second testimonial
+- `src/components/AudienceSection.tsx` — update copy
+- `src/components/BioVaultSection.tsx` — update copy
+- `src/pages/Process.tsx` — rebrand, add timeline connector
+- `src/pages/Methodology.tsx` — rebrand
+- `src/pages/Consultation.tsx` — rebrand
+- `src/pages/Auth.tsx` — rebrand
+- `src/pages/Refer.tsx` — rebrand
+- `src/pages/Admin.tsx` — rebrand
+- `src/pages/Index.tsx` — add stats banner section
+- `src/index.css` — add scroll progress bar styles
+- `index.html` — update title
 
-**Database migrations:**
-- Create `user_roles` table + `app_role` enum + `has_role()` function
-- Add SELECT policies on `consultations`/`assessments` for admins
-- Add admin SELECT/UPDATE on `bookings`
-- Add `referred_by` column to `bookings`
-- Create `referrals` table with RLS
+**New files:**
+- `src/components/StatsSection.tsx` — animated counter section
+
+**Database migration:**
+- Make `user_id` nullable, add `email` column, update INSERT policy
 
