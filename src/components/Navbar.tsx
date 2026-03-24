@@ -69,7 +69,7 @@ const Navbar = () => {
     >
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         <Link to="/" className="font-serif text-lg text-foreground tracking-wide">
-          MasterClass <span className="text-primary">Racketry</span>
+          Racket <span className="text-primary">Science</span>
         </Link>
 
         {/* Desktop nav */}
