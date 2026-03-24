@@ -37,7 +37,6 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image */}
       <img
         src={heroBg}
         alt=""
@@ -45,12 +44,10 @@ const HeroSection = () => {
         width={1920}
         height={1080}
       />
-      {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background/80 to-background/60" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(72_100%_50%/0.06),transparent_60%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(72_100%_50%/0.03),transparent_50%)]" />
 
-      {/* Floating glow orbs */}
       <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float" />
       <div className="absolute bottom-1/3 left-1/6 w-48 h-48 bg-primary/3 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
 
@@ -58,18 +55,17 @@ const HeroSection = () => {
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         <p className="text-primary font-sans text-sm tracking-[0.3em] uppercase mb-6 font-medium animate-fade-in">
-          MasterClass Racketry
+          Racket Science
         </p>
 
         <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.1] mb-8 text-foreground">
-          Mastery in Motion:{" "}
-          <span className="text-gradient-lime">Science-Backed</span> Coaching
-          for the Executive Athlete
+          The Science of{" "}
+          <span className="text-gradient-lime">Your Swing</span>
         </h1>
 
         <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto mb-12 font-light leading-relaxed">
-          Unlocking elite performance through the highest level of PE certification 
-          and biomechanical precision. Boutique coaching for those who demand the best.
+          Biomechanical precision meets elite coaching. Data-driven analysis for tennis, padel,
+          pickleball & squash — designed for athletes who demand measurable results.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -78,7 +74,7 @@ const HeroSection = () => {
             onClick={() => navigate("/book")}
             className="rounded-full px-10 py-6 text-base font-semibold tracking-wide glow-lime hover:scale-105 transition-transform"
           >
-            Apply for Elite Coaching
+            Book a Session
           </Button>
           <Button
             variant="outline"

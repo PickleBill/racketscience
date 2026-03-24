@@ -61,6 +61,7 @@ const FooterSection = () => {
                 <SelectContent>
                   <SelectItem value="tennis">Tennis</SelectItem>
                   <SelectItem value="padel">Padel</SelectItem>
+                  <SelectItem value="pickleball">Pickleball</SelectItem>
                   <SelectItem value="squash">Squash</SelectItem>
                 </SelectContent>
               </Select>
@@ -73,7 +74,7 @@ const FooterSection = () => {
 
           <div className="flex flex-col justify-between">
             <div>
-              <h3 className="font-serif text-2xl text-foreground mb-6">MasterClass Racketry</h3>
+              <h3 className="font-serif text-2xl text-foreground mb-6">Racket Science</h3>
               <p className="text-muted-foreground text-sm leading-relaxed mb-8">
                 Boutique, science-backed coaching for executive athletes who demand precision, data, and results. Master-certified in Physical Education and Racket Sports.
               </p>
@@ -91,7 +92,7 @@ const FooterSection = () => {
             <div className="mt-12 pt-8 border-t border-border">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <p className="text-muted-foreground text-xs">
-                  © {new Date().getFullYear()} MasterClass Racketry. All rights reserved.
+                  © {new Date().getFullYear()} Racket Science. All rights reserved.
                 </p>
                 <div className="flex gap-6 text-xs text-muted-foreground">
                   <span className="hover:text-primary transition-colors cursor-pointer">Privacy</span>
