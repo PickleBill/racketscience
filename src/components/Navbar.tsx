@@ -83,6 +83,11 @@ const Navbar = () => {
               {link.label}
             </button>
           ))}
+          {!user && (
+            <button onClick={() => navigate("/claim")} className="text-sm text-primary hover:text-primary/80 transition-colors font-medium">
+              Free Lesson
+            </button>
+          )}
           {user ? (
             <>
               {isAdmin && (
