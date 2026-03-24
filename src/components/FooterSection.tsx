@@ -89,6 +89,14 @@ const FooterSection = () => {
               </div>
             </div>
 
+            <div className="mt-8 glass rounded-2xl p-4 inline-flex items-center gap-3">
+              <span className="text-primary text-lg">🎁</span>
+              <div>
+                <a href="/claim" className="text-foreground font-semibold text-sm hover:text-primary transition-colors">Share a Free Lesson</a>
+                <p className="text-muted-foreground text-xs">Send a friend their first session on us</p>
+              </div>
+            </div>
+
             <div className="mt-12 pt-8 border-t border-border">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <p className="text-muted-foreground text-xs">

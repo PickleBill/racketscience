@@ -135,6 +135,11 @@ const Navbar = () => {
               {link.label}
             </button>
           ))}
+          {!user && (
+            <Button size="sm" variant="ghost" onClick={() => { setMobileOpen(false); navigate("/claim"); }} className="w-full text-primary justify-start font-medium">
+              🎁 Free Lesson
+            </Button>
+          )}
           <div className="pt-4 border-t border-border space-y-2">
             {user ? (
               <>
