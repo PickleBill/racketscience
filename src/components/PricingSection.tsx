@@ -99,7 +99,11 @@ const PricingSection = () => {
               </ul>
 
               <Button
-                onClick={() => navigate(`/checkout?type=${tier.name === "Legacy Assessment" ? "legacy" : tier.name === "Growth Tier" ? "growth" : "elite"}&amount=${tier.price.replace("$", "").replace("/mo", "")}`)}
+                onClick={() => {
+                  const subject = encodeURIComponent(`Sign Up: ${tier.name}`);
+                  const body = encodeURIComponent(`Hi Casey,\n\nI'd like to sign up for the ${tier.name} (${tier.price} ${tier.period}).\n\nName:\nSport (Tennis/Padel/Squash/Pickleball):\nPreferred days/times:\n\nThanks!`);
+                  window.location.href = `mailto:Casey.degnan@gmail.com?subject=${subject}&body=${body}`;
+                }}
                 className={`w-full rounded-full py-6 font-semibold tracking-wide ${
                   tier.highlighted
                     ? "glow-lime hover:scale-105 transition-transform"

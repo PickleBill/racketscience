@@ -13,7 +13,6 @@ import Consultation from "./pages/Consultation.tsx";
 import Admin from "./pages/Admin.tsx";
 import Refer from "./pages/Refer.tsx";
 import Claim from "./pages/Claim.tsx";
-import Checkout from "./pages/Checkout.tsx";
 import Playbook from "./pages/Playbook.tsx";
 
 const queryClient = new QueryClient();
@@ -34,7 +33,6 @@ const App = () => (
           <Route path="/admin" element={<Admin />} />
           <Route path="/refer" element={<Refer />} />
           <Route path="/claim" element={<Claim />} />
-          <Route path="/checkout" element={<Checkout />} />
           <Route path="/playbook" element={<Playbook />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
