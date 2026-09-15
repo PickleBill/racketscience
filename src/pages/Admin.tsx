@@ -42,14 +42,47 @@ const Admin = () => {
   }, []);
 
   const fetchAll = async () => {
-    const [b, c, a] = await Promise.all([
+    const [b, c, a, s, n] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("consultations").select("*").order("created_at", { ascending: false }),
       supabase.from("assessments").select("*").order("created_at", { ascending: false }),
+      supabase.from("site_settings").select("key,value"),
+      supabase.from("notification_log").select("*").eq("status", "queued").order("created_at", { ascending: false }),
     ]);
     setBookings(b.data || []);
     setConsultations(c.data || []);
     setAssessments(a.data || []);
+    const settings = Object.fromEntries((s.data || []).map((r: any) => [r.key, r.value]));
+    if (settings.notify_email) setNotifyEmail(settings.notify_email);
+    setNotifyEnabled(settings.notify_enabled !== "false");
+    setQueued(n.data || []);
+  };
+
+  const handleToggleNotify = async (checked: boolean) => {
+    setNotifyEnabled(checked);
+    const { error } = await supabase
+      .from("site_settings")
+      .update({ value: String(checked), updated_at: new Date().toISOString() })
+      .eq("key", "notify_enabled");
+    if (error) {
+      setNotifyEnabled(!checked);
+      toast({ title: "Couldn't save setting", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: checked ? "Auto-email on" : "Auto-email paused", description: checked ? `Every new lead is captured for ${notifyEmail}.` : "New leads will be logged but not queued for email." });
+    }
+  };
+
+  const emailQueuedLeads = () => {
+    if (queued.length === 0) return;
+    const digest = queued.map((q) => `— ${q.subject}\n${q.body}`).join("\n\n");
+    const subject = encodeURIComponent(`Racket Science — ${queued.length} new lead${queued.length > 1 ? "s" : ""} waiting`);
+    const body = encodeURIComponent(digest);
+    window.location.href = `mailto:${notifyEmail}?subject=${subject}&body=${body}`;
+    const ids = queued.map((q) => q.id);
+    supabase.from("notification_log").update({ status: "sent" }).in("id", ids).then(() => {
+      setQueued([]);
+      toast({ title: "Digest opened", description: "Marked as sent. Hit send in your email app to deliver it." });
+    });
   };
 
   const updateBookingStatus = async (id: string, status: string) => {
