@@ -1,6 +1,5 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const tiers = [
@@ -50,7 +49,6 @@ const tiers = [
 ];
 
 const PricingSection = () => {
-  const navigate = useNavigate();
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -111,7 +109,7 @@ const PricingSection = () => {
                 }`}
                 variant={tier.highlighted ? "default" : "secondary"}
               >
-                Get Started
+                Sign Up
               </Button>
             </div>
           ))}
