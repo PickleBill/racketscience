@@ -254,6 +254,52 @@ const Admin = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          {/* Email notifications — capture every new lead */}
+          <div className="glass rounded-2xl border-primary/30 glow-lime p-8 mt-10">
+            <div className="flex flex-col md:flex-row md:items-center gap-8">
+              <div className="flex items-start gap-4 flex-1">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 glow-lime">
+                  <BellRing className="w-7 h-7 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl text-foreground mb-1">Email New Bookings to Casey</h2>
+                  <p className="text-muted-foreground text-sm mb-2">
+                    Every booking, consult request, and assessment is automatically captured and emailed to:
+                  </p>
+                  <p className="text-primary font-semibold text-lg break-all">{notifyEmail}</p>
+                </div>
+              </div>
+              <div className="flex flex-col items-start md:items-end gap-4">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <span className="text-sm text-muted-foreground">{notifyEnabled ? "Auto-capture ON" : "Auto-capture OFF"}</span>
+                  <Switch checked={notifyEnabled} onCheckedChange={handleToggleNotify} className="scale-125 data-[state=checked]:bg-primary" />
+                </label>
+                <Button
+                  onClick={emailQueuedLeads}
+                  disabled={queued.length === 0}
+                  size="lg"
+                  className="rounded-full px-8 py-6 text-base font-semibold glow-lime hover:scale-[1.02] transition-transform gap-2"
+                >
+                  <Mail className="w-5 h-5" />
+                  {queued.length > 0 ? `Email ${queued.length} New Lead${queued.length > 1 ? "s" : ""} Now` : "All Leads Sent"}
+                </Button>
+              </div>
+            </div>
+            {queued.length > 0 && (
+              <div className="mt-6 border-t border-border pt-4">
+                <p className="text-xs text-muted-foreground mb-2">Waiting to be emailed:</p>
+                <ul className="space-y-1">
+                  {queued.slice(0, 5).map((q) => (
+                    <li key={q.id} className="text-sm text-foreground/80 truncate">• {q.subject}</li>
+                  ))}
+                  {queued.length > 5 && (
+                    <li className="text-xs text-muted-foreground">and {queued.length - 5} more…</li>
+                  )}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
