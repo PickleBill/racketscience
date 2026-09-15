@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { ShieldCheck, CalendarDays, MessageSquare, ClipboardList } from "lucide-react";
+import { ShieldCheck, CalendarDays, MessageSquare, ClipboardList, Mail, BellRing } from "lucide-react";
 
 const statusColors: Record<string, string> = {
   confirmed: "bg-primary/20 text-primary border-primary/30",
