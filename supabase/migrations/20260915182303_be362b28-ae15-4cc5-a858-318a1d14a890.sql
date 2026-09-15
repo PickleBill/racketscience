@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.queue_casey_notification() FROM anon, authenticated, public;

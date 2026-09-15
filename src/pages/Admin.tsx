@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { ShieldCheck, CalendarDays, MessageSquare, ClipboardList } from "lucide-react";
+import { ShieldCheck, CalendarDays, MessageSquare, ClipboardList, Mail, BellRing } from "lucide-react";
 
 const statusColors: Record<string, string> = {
   confirmed: "bg-primary/20 text-primary border-primary/30",
@@ -24,6 +25,9 @@ const Admin = () => {
   const [bookings, setBookings] = useState<any[]>([]);
   const [consultations, setConsultations] = useState<any[]>([]);
   const [assessments, setAssessments] = useState<any[]>([]);
+  const [notifyEmail, setNotifyEmail] = useState("Casey.Degnan@gmail.com");
+  const [notifyEnabled, setNotifyEnabled] = useState(true);
+  const [queued, setQueued] = useState<any[]>([]);
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -38,14 +42,47 @@ const Admin = () => {
   }, []);
 
   const fetchAll = async () => {
-    const [b, c, a] = await Promise.all([
+    const [b, c, a, s, n] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("consultations").select("*").order("created_at", { ascending: false }),
       supabase.from("assessments").select("*").order("created_at", { ascending: false }),
+      supabase.from("site_settings").select("key,value"),
+      supabase.from("notification_log").select("*").eq("status", "queued").order("created_at", { ascending: false }),
     ]);
     setBookings(b.data || []);
     setConsultations(c.data || []);
     setAssessments(a.data || []);
+    const settings = Object.fromEntries((s.data || []).map((r: any) => [r.key, r.value]));
+    if (settings.notify_email) setNotifyEmail(settings.notify_email);
+    setNotifyEnabled(settings.notify_enabled !== "false");
+    setQueued(n.data || []);
+  };
+
+  const handleToggleNotify = async (checked: boolean) => {
+    setNotifyEnabled(checked);
+    const { error } = await supabase
+      .from("site_settings")
+      .update({ value: String(checked), updated_at: new Date().toISOString() })
+      .eq("key", "notify_enabled");
+    if (error) {
+      setNotifyEnabled(!checked);
+      toast({ title: "Couldn't save setting", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: checked ? "Auto-email on" : "Auto-email paused", description: checked ? `Every new lead is captured for ${notifyEmail}.` : "New leads will be logged but not queued for email." });
+    }
+  };
+
+  const emailQueuedLeads = () => {
+    if (queued.length === 0) return;
+    const digest = queued.map((q) => `— ${q.subject}\n${q.body}`).join("\n\n");
+    const subject = encodeURIComponent(`Racket Science — ${queued.length} new lead${queued.length > 1 ? "s" : ""} waiting`);
+    const body = encodeURIComponent(digest);
+    window.location.href = `mailto:${notifyEmail}?subject=${subject}&body=${body}`;
+    const ids = queued.map((q) => q.id);
+    supabase.from("notification_log").update({ status: "sent" }).in("id", ids).then(() => {
+      setQueued([]);
+      toast({ title: "Digest opened", description: "Marked as sent. Hit send in your email app to deliver it." });
+    });
   };
 
   const updateBookingStatus = async (id: string, status: string) => {
@@ -217,6 +254,52 @@ const Admin = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          {/* Email notifications — capture every new lead */}
+          <div className="glass rounded-2xl border-primary/30 glow-lime p-8 mt-10">
+            <div className="flex flex-col md:flex-row md:items-center gap-8">
+              <div className="flex items-start gap-4 flex-1">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 glow-lime">
+                  <BellRing className="w-7 h-7 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl text-foreground mb-1">Email New Bookings to Casey</h2>
+                  <p className="text-muted-foreground text-sm mb-2">
+                    Every booking, consult request, and assessment is automatically captured and emailed to:
+                  </p>
+                  <p className="text-primary font-semibold text-lg break-all">{notifyEmail}</p>
+                </div>
+              </div>
+              <div className="flex flex-col items-start md:items-end gap-4">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <span className="text-sm text-muted-foreground">{notifyEnabled ? "Auto-capture ON" : "Auto-capture OFF"}</span>
+                  <Switch checked={notifyEnabled} onCheckedChange={handleToggleNotify} className="scale-125 data-[state=checked]:bg-primary" />
+                </label>
+                <Button
+                  onClick={emailQueuedLeads}
+                  disabled={queued.length === 0}
+                  size="lg"
+                  className="rounded-full px-8 py-6 text-base font-semibold glow-lime hover:scale-[1.02] transition-transform gap-2"
+                >
+                  <Mail className="w-5 h-5" />
+                  {queued.length > 0 ? `Email ${queued.length} New Lead${queued.length > 1 ? "s" : ""} Now` : "All Leads Sent"}
+                </Button>
+              </div>
+            </div>
+            {queued.length > 0 && (
+              <div className="mt-6 border-t border-border pt-4">
+                <p className="text-xs text-muted-foreground mb-2">Waiting to be emailed:</p>
+                <ul className="space-y-1">
+                  {queued.slice(0, 5).map((q) => (
+                    <li key={q.id} className="text-sm text-foreground/80 truncate">• {q.subject}</li>
+                  ))}
+                  {queued.length > 5 && (
+                    <li className="text-xs text-muted-foreground">and {queued.length - 5} more…</li>
+                  )}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
