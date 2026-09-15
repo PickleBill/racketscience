@@ -57,6 +57,7 @@ const Navbar = () => {
     { label: "Framework", action: () => scrollToSection("value-props") },
     { label: "Process", action: () => { setMobileOpen(false); navigate("/process"); } },
     { label: "Methodology", action: () => { setMobileOpen(false); navigate("/methodology"); } },
+    { label: "Playbook", action: () => { setMobileOpen(false); navigate("/playbook"); } },
     { label: "Pricing", action: () => scrollToSection("pricing") },
     { label: "Free Consult", action: () => { setMobileOpen(false); navigate("/consultation"); } },
   ];

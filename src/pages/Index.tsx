@@ -7,6 +7,7 @@ import StatsSection from "@/components/StatsSection";
 import PricingSection from "@/components/PricingSection";
 import BioVaultSection from "@/components/BioVaultSection";
 import AudienceSection from "@/components/AudienceSection";
+import PlaybookSection from "@/components/PlaybookSection";
 import TestimonialSection from "@/components/TestimonialSection";
 import FooterSection from "@/components/FooterSection";
 
@@ -56,6 +57,8 @@ const Index = () => {
       <div id="bio-vault"><BioVaultSection /></div>
       <SectionDivider />
       <AudienceSection />
+      <SectionDivider />
+      <PlaybookSection />
       <SectionDivider />
       <div id="testimonials"><TestimonialSection /></div>
       <FooterSection />
