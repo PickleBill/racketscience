@@ -25,6 +25,9 @@ const Admin = () => {
   const [bookings, setBookings] = useState<any[]>([]);
   const [consultations, setConsultations] = useState<any[]>([]);
   const [assessments, setAssessments] = useState<any[]>([]);
+  const [notifyEmail, setNotifyEmail] = useState("Casey.Degnan@gmail.com");
+  const [notifyEnabled, setNotifyEnabled] = useState(true);
+  const [queued, setQueued] = useState<any[]>([]);
 
   useEffect(() => {
     const checkAdmin = async () => {
